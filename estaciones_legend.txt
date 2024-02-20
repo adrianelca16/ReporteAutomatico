@@ -1,0 +1,6 @@
+H 8 1 LEYENDA
+S 0.1c a 0.15c white thin 0.5c Epicentro
+S 0.1c c 0.15c black thin 0.5c Ciudades S
+S 0.1c t 0.15c yellow thin 0.5c Estaciones
+S 0.1c c 0.15c orange  thin 0.5c Sismicidad
+S 0.1c - 10p - 2.0p,red 0.5c Fallas G
