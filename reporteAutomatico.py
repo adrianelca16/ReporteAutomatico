@@ -11,13 +11,28 @@ sismo_lat = 9.9623
 
 w, h = letter
 
-c = canvas.Canvas("muestra.pdf", pagesize=letter)
-c.drawString(50, h-50, "esto es un texto en pdf")
+c = canvas.Canvas("muestra.pdf", pagesize=A4)
 
-#c.line(50, h-70, 400, h-70)
+c.drawImage("Cintillo_2024_Mesa_de_trabajo1.png", 100 , h, width=400, height=25)
 
-c.drawImage("ejemplo.png", 100 , h-400, width=200, height=200)
+c.setFont("Helvetica", 11)
 
-#c.drawImage("Cintillo2024EPS.png", 0 , h-200)
+c.drawString(200, h-30, "SERVICIO SISMÓLOGICO VENEZOLANO")
+
+c.line(80, h-50, 530, h-50)
+
+c.setFont("Helvetica-Bold", 18)
+
+c.drawString(165, h-85, "Reporte Sismológico Automático")
+
+c.line(80, h-105, 530, h-105)
+
+c.drawImage("ejemplo.png", 110 , h-485, width=360, height=360)
+
+c.line(80, h-680, 530, h-680)
+
+c.drawImage("ministerio-01.png", 200, h-760, width=70, height=70 )
+
+c.drawImage("cintillo_redes_Mesa_de_trabajo1.png", 130, h-780, width=350, height=10)
 
 c.save()
