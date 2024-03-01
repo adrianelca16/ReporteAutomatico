@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="cintillos">
+    <file>cintillo.png</file>
+  </qresource>
+</RCC>
