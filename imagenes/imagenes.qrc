@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="cintillos">
+    <file>cintillo-cuadrado.png</file>
+    <file>Logo-Funvisis.png</file>
     <file>cintillo.png</file>
   </qresource>
 </RCC>
