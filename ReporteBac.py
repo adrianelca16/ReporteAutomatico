@@ -30,6 +30,8 @@ class MiApp(QtWidgets.QMainWindow,):
     def irImprimir(self):
         self.ui.stackedWidget_izq.setCurrentIndex(1)
         self.ui.stackedWidget_der.setCurrentIndex(1)
+
+        
     def volver(self):
         self.ui.stackedWidget_izq.setCurrentIndex(0)
 
