@@ -34,6 +34,7 @@ class MiApp(QtWidgets.QMainWindow,):
         
     def volver(self):
         self.ui.stackedWidget_izq.setCurrentIndex(0)
+        self.ui.stackedWidget_der.setCurrentIndex(0)
 
 
 if __name__ == "__main__":

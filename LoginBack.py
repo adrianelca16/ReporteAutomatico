@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 import sys
 from conexion_postgresql import conectar_db, buscarUsuario
 from os import startfile
+import subprocess
 
 class MiApp(QtWidgets.QMainWindow): 
     def __init__(self):
@@ -21,8 +22,13 @@ class MiApp(QtWidgets.QMainWindow):
             login = buscarUsuario(self.connection,usuario,password)
 
             if login == "login" :
-                self.abrir = self.abrir_menu()
-                self.hide()
+
+                script_path = "ReporteBac.py"
+        
+        # Usa subprocess.Popen para ejecutar otro script de Python
+                subprocess.Popen(["python", script_path])
+                #self.abrir = self.abrir_menu()
+                #self.hide()
                 self.close()
 
     def abrir_menu(self):
