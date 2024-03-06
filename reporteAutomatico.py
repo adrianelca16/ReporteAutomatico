@@ -7,13 +7,13 @@ sismo_lon = -67.5988
 sismo_lat = 9.9623
 
 # Llamar al script ReporteAutomatico.py y pasar los datos del sismo como argumentos
-#subprocess.run(['python', 'mapadeestaciones.py', '--lon', str(sismo_lon), '--lat', str(sismo_lat)])
+subprocess.run(['python', 'mapadeestaciones.py', '--lon', str(sismo_lon), '--lat', str(sismo_lat)])
 
 w, h = letter
 
 c = canvas.Canvas("muestra.pdf", pagesize=A4)
 
-c.drawImage("Cintillo_2024_Mesa_de_trabajo1.png", 100 , h, width=400, height=25)
+c.drawImage("./imagenes/Cintillo_2024_Mesa_de_trabajo1.png", 100 , h, width=400, height=25)
 
 c.setFont("Helvetica", 11)
 
@@ -27,7 +27,7 @@ c.drawString(165, h-85, "Reporte Sismológico Automático")
 
 c.line(80, h-105, 530, h-105)
 
-c.drawImage("ejemplo.png", 90 , h-485, width=400, height=360)
+c.drawImage("./imagenes/ejemplo.png", 90 , h-485, width=400, height=360)
 
 c.setFont("Helvetica", 6)
 
@@ -79,10 +79,10 @@ c.line(300, h-550, 300, h-600)
 
 c.line(80, h-680, 530, h-680)
 
-c.drawImage("ministerio-01.png", 200, h-760, width=70, height=70 )
+c.drawImage("./imagenes/ministerio-01.png", 200, h-760, width=70, height=70 )
 
-c.drawImage("Logo-Funvisis.png", 300, h-760, width=70 , height= 70)
+c.drawImage("./imagenes/Logo-Funvisis.png", 300, h-760, width=70 , height= 70)
 
-c.drawImage("cintillo_redes_Mesa_de_trabajo1.png", 130, h-780, width=350, height=10)
+c.drawImage("./imagenes/cintillo_redes_Mesa_de_trabajo1.png", 130, h-780, width=350, height=10)
 
 c.save()

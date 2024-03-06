@@ -8,10 +8,10 @@ def main():
     parser.add_argument('--lat', type=float, help='Latitud del sismo')
     args = parser.parse_args()
 
-    estaciones = pd.read_csv("ESTACIONES.txt", sep='\s+')  # Estaciones nacionales
-    nofun = pd.read_csv("ESTACIONES_NOFUNV.txt", sep='\s+')  # Estaciones internacionales
-    ciuc = pd.read_csv("ciuc.txt", sep=' ', skipinitialspace=True) #ciudades
-    ciu = pd.read_csv("ciu.txt", sep=' ', skipinitialspace=True) #ciudades
+    estaciones = pd.read_csv("./assets/ESTACIONES.txt", sep='\s+')  # Estaciones nacionales
+    nofun = pd.read_csv("./assets/ESTACIONES_NOFUNV.txt", sep='\s+')  # Estaciones internacionales
+    ciuc = pd.read_csv("./assets/ciuc.txt", sep=' ', skipinitialspace=True) #ciudades
+    ciu = pd.read_csv("./assets/ciu.txt", sep=' ', skipinitialspace=True) #ciudades
 
     #Datos del sismo pero esto es variable
     sismo_lon = args.lon
@@ -25,11 +25,11 @@ def main():
     fig = pygmt.Figure()
 
     # Agregar la base del mapa
-    fig.grdimage(grid='etopo1_bedrock.grd', cmap='verde.cpt', region=region, projection='M8c', frame=True)
+    fig.grdimage(grid='./assets/etopo1_bedrock.grd', cmap='./assets/verde.cpt', region=region, projection='M8c', frame=True)
 
     # Agregar límites costeros, fronteras y fallas
     fig.coast(shorelines=True, resolution='f', borders=['1/0.8p', '2/0.1p'])
-    fig.plot(data='fallas2015.txt', pen='0.2,red')
+    fig.plot(data='./assets/fallas2015.txt', pen='0.2,red')
 
     # Estaciones nacionales
     fig.plot(x=estaciones.Lon, y=estaciones.Lat, style="t0.2c", color='yellow', pen="black")
@@ -62,7 +62,7 @@ def main():
 
     fig.text(x=norte_lon, y=norte_lat + 0.4,text='N', font='14p,Helvetica-Bold,black', justify='CM')
 
-    fig.legend(position="jBR", box='+glavender+p0.5p+r',spec='estaciones_legend.txt')
+    fig.legend(position="jBR", box='+glavender+p0.5p+r',spec='./assets/estaciones_legend.txt')
 
     # Trazar el rectángulo
 
@@ -85,7 +85,7 @@ def main():
         region=[-74, -59, 1, 13],  # Región ajustada a Venezuela
         projection="M3c",  # Proyección Mercator
     ):
-        fig.grdimage(grid='etopo1_bedrock.grd', cmap='verde.cpt', frame=True)
+        fig.grdimage(grid='./assets/etopo1_bedrock.grd', cmap='./assets/verde.cpt', frame=True)
         fig.coast(
             region=[-74, -59, 1, 13],  # Región ajustada a Venezuela
             shorelines=True,
@@ -95,6 +95,6 @@ def main():
         )
         fig.plot(data=rectangle, style="r+s", pen="1p,red")
 
-    fig.savefig('ejemplo.png')
+    fig.savefig('./imagenes/ejemplo.png')
 if __name__ == "__main__":
      main()
