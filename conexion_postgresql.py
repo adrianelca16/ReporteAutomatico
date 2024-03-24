@@ -29,7 +29,7 @@ def buscarUsuario(connection,usuario, password):
             mensaje = "Usuario no encontrado"
         else:
             for row in rows:
-                stored_password = row[2]
+                stored_password = row[3]
                 if stored_password == password :
                     mensaje = "login"
                 else:

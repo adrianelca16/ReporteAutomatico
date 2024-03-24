@@ -1,7 +1,6 @@
 from Reporte import *
 from PyQt5 import QtWidgets
 import sys
-import fitz  # Importar la biblioteca PyMuPDF
 
 class MiApp(QtWidgets.QMainWindow,):
     def __init__(self):
