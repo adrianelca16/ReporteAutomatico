@@ -1,0 +1,19 @@
+
+  Alert Funvisis2024ewgyc: determined by 5 stations, type M
+
+ LOCSAT solution with earthmodel iasp91 (with start solution, 5 stations used, weight 5):
+
+  Near Coast of Venezuela  MLv=3.7  2024/03/10  02:16:45.8  10.93 N  62.52 W   0 km
+
+  Stat  Net Date      Time               Amp  Per   Res  Dist  Az  mb  ML  mB
+  GRGR  CU  24/03/10  02:17:31.9         0.0  0.0  -0.3   1.5  35 0.0 3.3 0.0
+  GRGR  CU  24/03/10  02:17:12.9         0.0  0.0   0.4   1.5  35 0.0 3.3 0.0
+  TACV  VE  24/03/10  02:17:55.1         0.0  0.0  -0.0   4.5 260 0.0 0.0 0.0
+  BENV  VE  24/03/10  02:18:02.0         0.0  0.0  -1.0   5.1 259 0.0 0.0 0.0
+  TURV  VE  24/03/10  02:18:06.4        28.1  1.2   0.9   5.2 265 4.2 4.1 0.0
+
+ RMS-ERR:         0.65
+
+ Event created:       2024/03/10 03:13:04
+ This origin created: 2024/03/10 03:11:13
+
