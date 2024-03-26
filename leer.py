@@ -13,4 +13,4 @@ print ('latitud: ', latitud)
 print ('longitud: ', longitud)
 print ('profundidad: ', profundidad)
 
-subprocess.run(['python', 'Azimut.py', '--mag', str(magnitud), '--lat', str(latitud), '--lon',str(longitud), '--profundidad',str(profundidad)])  # Ejecuta el
+subprocess.run(['python', 'Azimut.py', '--mag', str(magnitud), '--lat', str(latitud), '--lon',str(longitud), '--pro',str(profundidad)])  # Ejecuta el

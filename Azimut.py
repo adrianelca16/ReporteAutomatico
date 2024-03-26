@@ -1,11 +1,9 @@
 import math
 import pandas as pd
-
+import argparse
+import subprocess
 # Radio de la Tierra en kilómetros
 radio_tierra = 6371.0
-
-lat_punto_fijo = 10.41
-lon_punto_fijo = -72.75
 
 # Función para calcular la distancia haversine entre dos puntos en kilómetros
 def calcular_distancia(lat1, lon1, lat2, lon2):
@@ -45,36 +43,55 @@ def obtener_direccion(azimut):
     # Devolver la dirección cardinal correspondiente al octante
     return octantes[octante_index]
 
-# Leer el archivo
-ciu = pd.read_csv("./assets/ciu.txt", sep='\s+')
+if __name__ == "__main__":
+    # Parsear los argumentos de la línea de comandos
+    parser = argparse.ArgumentParser(description='Calcula las distancias y direcciones desde un punto fijo a ciudades.')
+    parser.add_argument('--lat', type=float, help='Latitud del punto fijo')
+    parser.add_argument('--lon', type=float, help='Longitud del punto fijo')
+    parser.add_argument('--mag', type=float, help='Longitud del punto fijo')
+    parser.add_argument('--pro', type=float, help='Longitud del punto fijo')
+    args = parser.parse_args()
 
-# Obtener las columnas de latitud y longitud
-latitudes = ciu['Lat']
-longitudes = ciu['Lon']
+    lat_punto_fijo = args.lat
+    lon_punto_fijo = -abs(args.lon)
 
-# Lista para almacenar las distancias y direcciones
-distancias = []
-direcciones = []
+    # Leer el archivo
+    ciu = pd.read_csv("./assets/ciu.txt", sep='\s+')
 
-# Calcular las distancias y direcciones y almacenarlas en las listas correspondientes
-for lat, lon in zip(latitudes, longitudes):
-    distancia = calcular_distancia(lat_punto_fijo, lon_punto_fijo, lat, lon)
-    azimut = calcular_azimut(lat_punto_fijo, lon_punto_fijo, lat, lon)
-    direccion = obtener_direccion(azimut)
-    distancias.append(distancia)
-    direcciones.append(direccion)
+    # Obtener las columnas de latitud, longitud y nombres de las ciudades
+    latitudes = ciu['Lat']
+    longitudes = ciu['Lon']
+    ciudades = ciu['Nombre']
 
-# Ordenar las distancias y obtener los índices de las dos distancias más bajas
-indices_distancias_bajas = sorted(range(len(distancias)), key=lambda i: distancias[i])[:2]
+    # Lista para almacenar las distancias y direcciones
+    distancias = []
+    direcciones = []
 
-# Mostrar las dos distancias más bajas, sus coordenadas correspondientes y direcciones
-for indice in indices_distancias_bajas:
-    distancia = distancias[indice]
-    lat = latitudes[indice]
-    lon = longitudes[indice]
-    direccion = direcciones[indice]
-    if direccion == "N":
-        direccion1 = "norte"
-    print("Distancia:", round(distancia), "km hacia el", direccion)
-    azimut = calcular_azimut(lat_punto_fijo, lon_punto_fijo, lat, lon)  # Calcular el azimut específico para este punto
-    print("Azimut:", round(azimut), "grados")
+    # Calcular las distancias y direcciones y almacenarlas en las listas correspondientes
+    for lat, lon in zip(latitudes, longitudes):
+        distancia = calcular_distancia(lat_punto_fijo, lon_punto_fijo, lat, lon)
+        azimut = calcular_azimut(lat_punto_fijo, lon_punto_fijo, lat, lon)
+        direccion = obtener_direccion(azimut)
+        distancias.append(distancia)
+        direcciones.append(direccion)
+
+    # Ordenar las distancias y obtener los índices de las dos distancias más bajas
+    indices_distancias_bajas = sorted(range(len(distancias)), key=lambda i: distancias[i])[:2]
+
+    resultados = []
+    # Mostrar las dos distancias más bajas, sus coordenadas correspondientes y direcciones
+    for indice in indices_distancias_bajas:
+        distancia = distancias[indice]
+        lat = latitudes[indice]
+        lon = longitudes[indice]
+        direccion = direcciones[indice]
+        nomCiu = ciudades[indice]
+
+        azimut = calcular_azimut(lat_punto_fijo, lon_punto_fijo, lat, lon) 
+
+        resultado = f"Distancia: {round(distancia)} km hacia el {direccion} desde {nomCiu} (Azm. {round(azimut)})"
+
+        resultados.append(resultado)
+    
+    subprocess.run(['python', 'reporteAutomatico.py', '--mag', str(args.mag), '--lat', str(args.lat), '--lon',str(args.lon), '--pro',str(args.pro), '--azm1',str(resultados[0]), '--azm2', str(resultados[1])])
+    print(resultados)
