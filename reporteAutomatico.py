@@ -3,6 +3,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, letter
 import argparse
 from pdf2image import convert_from_path
+from PIL import Image
+
 def generar_reporte(args):
     w, h = letter
 
@@ -91,8 +93,16 @@ def generar_reporte(args):
     images = convert_from_path(pdf_path)
 
     for i, image in enumerate(images):
+    # Redimensionar la imagen
+    # Guardar la imagen redimensionada
         image_path = f"muestra.png"
         image.save(image_path, "PNG")
+
+        saved_image = Image.open(image_path)
+    # Redimensionar la imagen
+        resized_image = saved_image.resize((400, 500))
+    # Guardar la imagen redimensionada
+        resized_image.save(image_path)
     
 
 if __name__ == "__main__":
