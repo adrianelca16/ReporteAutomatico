@@ -34,15 +34,16 @@ class MiApp(QtWidgets.QMainWindow,):
 
 
     def irImprimir(self):
+        python_path = sys.executable
         comandoLista = "scevtls -d postgresql:// --begin 01-01-2024 00:00:00 > lista_de_eventos.txt"
-        subprocess.call(comandoLista, shell=True)
-        with open("lista_de_eventos.txt","r") as archivo:
-            ultimo_sismo = archivo.readlines()[-1]
-        comandoXml = "scxmldump -d postgresql:// -E " + ultimo_sismo + " -PAMF -o ultimo_evento.xml"
-        subprocess.call(comandoXml,shell=True)
-        comandoBoletin = "scbulletin -i /home/ndcuser/reporteautomatico/ultimo_evento.xml > /home/ndcuser/reporteautomatico/bulletin_ultimo_sismo.txt"
-        subprocess.call(comandoBoletin,shell=True)
-        subprocess.run(['python', 'leer.py'])
+        #subprocess.call(comandoLista, shell=True)
+        #with open("lista_de_eventos.txt","r") as archivo:
+            #ultimo_sismo = archivo.readlines()[-1]
+        #comandoXml = "scxmldump -d postgresql:// -E " + ultimo_sismo + " -PAMF -o ultimo_evento.xml"
+        #subprocess.call(comandoXml,shell=True)
+        comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimo_evento.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
+        #subprocess.call(comandoBoletin,shell=True)
+        subprocess.call([python_path, 'leer.py'])
         self.ui.stackedWidget_izq.setCurrentIndex(1)
         image_widget = create_image_widget("./muestra.png",400,500)
         self.ui.stackedWidget_der.insertWidget(1, image_widget)
