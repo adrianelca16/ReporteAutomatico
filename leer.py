@@ -8,9 +8,9 @@ with open ('bulletin_ultimo_evento.txt', 'r') as archivo:
     latitud = linea[7]
     longitud = linea[9]
     profundidad = linea[11]
-print ('magnitud: ', magnitud)
-print ('latitud: ', latitud)
-print ('longitud: ', longitud)
-print ('profundidad: ', profundidad)
+    fecha = linea[5]
+    hora = linea[6]
 
-subprocess.run(['python', 'Azimut.py', '--mag', str(magnitud), '--lat', str(latitud), '--lon',str(longitud), '--pro',str(profundidad)])  # Ejecuta el
+    if float(profundidad) == 0:
+        profundidad = "5.0"
+subprocess.run(['python', 'Azimut.py', '--mag', str(magnitud), '--lat', str(latitud), '--lon',str(longitud), '--pro',str(profundidad), '--fec', str(fecha), '--hor', str(hora)])  # Ejecuta el

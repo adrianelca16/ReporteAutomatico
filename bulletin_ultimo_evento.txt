@@ -3,7 +3,7 @@
 
  LOCSAT solution with earthmodel iasp91 (with start solution, 5 stations used, weight 5):
 
-  Near Coast of Venezuela  MLv=3.7  2024/03/10  02:16:45.8  10.93 N  62.52 W   0 km
+  Near Coast of Venezuela  MLv=4.0  2024/03/26  02:16:45.8  11.50 N  70.30 W   8 km
 
   Stat  Net Date      Time               Amp  Per   Res  Dist  Az  mb  ML  mB
   GRGR  CU  24/03/10  02:17:31.9         0.0  0.0  -0.3   1.5  35 0.0 3.3 0.0

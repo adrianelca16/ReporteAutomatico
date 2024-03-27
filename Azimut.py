@@ -50,6 +50,8 @@ if __name__ == "__main__":
     parser.add_argument('--lon', type=float, help='Longitud del punto fijo')
     parser.add_argument('--mag', type=float, help='Longitud del punto fijo')
     parser.add_argument('--pro', type=float, help='Longitud del punto fijo')
+    parser.add_argument('--fec', type=str, help='Longitud del punto fijo')
+    parser.add_argument('--hor', type=str, help='Longitud del punto fijo')
     args = parser.parse_args()
 
     lat_punto_fijo = args.lat
@@ -93,5 +95,5 @@ if __name__ == "__main__":
 
         resultados.append(resultado)
     
-    subprocess.run(['python', 'reporteAutomatico.py', '--mag', str(args.mag), '--lat', str(args.lat), '--lon',str(args.lon), '--pro',str(args.pro), '--azm1',str(resultados[0]), '--azm2', str(resultados[1])])
+    subprocess.run(['python', 'reporteAutomatico.py', '--mag', str(args.mag), '--lat', str(args.lat), '--lon',str(args.lon), '--pro',str(args.pro),'--fec',str(args.fec) ,'--hor',str(args.hor),'--azm1',str(resultados[0]), '--azm2', str(resultados[1])])
     print(resultados)

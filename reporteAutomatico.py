@@ -2,9 +2,31 @@ import subprocess
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, letter
 import argparse
-
+from pdf2image import convert_from_path
 def generar_reporte(args):
     w, h = letter
+
+    fechaUTC = args.fec
+    fechaHLV = args.fec
+    horaUTC = args.hor
+    horaHLV = args.hor
+
+    #campos con args
+    Latitud = args.lat
+    Longitud = args.lon
+    Profundidad = args.pro
+    Magnitud = args.mag
+
+    Localiza1 = args.azm1
+    Localiza2 = args.azm2
+
+    lon= float(Longitud)
+    lonDeci = "{:.2f}".format(-lon)
+
+    lat=float(Latitud)
+    latDeci="{:.2f}".format(lat)
+
+    subprocess.run(['python','mapadeestaciones.py','--lat', latDeci, '--lon', lonDeci])
 
     c = canvas.Canvas(args.output_file, pagesize=A4)
 
@@ -28,19 +50,7 @@ def generar_reporte(args):
 
     c.drawString(170, h-520, "Proyección Mercator | Datum WGS84 | Escala 1:3.500.000 | Fuentes: IGVSB, Funvisis")
     #campos que me faltan por arg
-    fechaUTC = "15/02/2024"
-    fechaHLV = "14/02/2024"
-    horaUTC = "00:14:8,4"
-    horaHLV = "20:14:8,4"
-
-    #campos con args
-    Latitud = args.lat
-    Longitud = args.lon
-    Profundidad = args.pro
-    Magnitud = args.mag
-
-    Localiza1 = args.azm1
-    Localiza2 = args.azm2
+    
 
     c.setFont("Helvetica-Bold", 11)
 
@@ -52,7 +62,7 @@ def generar_reporte(args):
     c.drawString(390, h-573, Longitud)
     c.drawString(410, h-586, Profundidad)
     c.drawString(400, h-599, Magnitud)
-    c.drawString(180, h-658, Localiza1)
+    c.drawString(165, h-658, Localiza1)
     c.drawString(175, h-671, Localiza2)
 
     c.setFont("Helvetica", 11)
@@ -76,6 +86,15 @@ def generar_reporte(args):
 
     c.save()
 
+    pdf_path = "./muestra.pdf"
+
+    images = convert_from_path(pdf_path)
+
+    for i, image in enumerate(images):
+        image_path = f"muestra.png"
+        image.save(image_path, "PNG")
+    
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Genera un reporte sismológico automático en formato PDF.')
     parser.add_argument('--lat', type=str, help='Latitud del epicentro del sismo')
@@ -84,7 +103,11 @@ if __name__ == "__main__":
     parser.add_argument('--mag', type=str, help='Magnitud del sismo')
     parser.add_argument('--azm1', type=str, help='Magnitud del sismo')
     parser.add_argument('--azm2', type=str, help='Magnitud del sismo')
+    parser.add_argument('--fec', type=str, help='Magnitud del sismo')
+    parser.add_argument('--hor', type=str, help='Magnitud del sismo')
     parser.add_argument('--output_file', type=str, default='muestra.pdf', help='Nombre del archivo de salida PDF')
     args = parser.parse_args()
+
+    #
 
     generar_reporte(args)
