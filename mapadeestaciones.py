@@ -1,6 +1,7 @@
 import argparse
 import pygmt
 import pandas as pd
+import numpy as np
 
 def main():
     parser = argparse.ArgumentParser(description='Genera un reporte automático con datos de sismo.')
@@ -38,16 +39,14 @@ def main():
     fig.plot(x=nofun.Lon, y=nofun.Lat, style="t0.2c", color='green', pen="black")
 
     #ciudades Grandes
-    fig.plot(x=ciuc.Lon, y=ciuc.Lat, style="c0.12c", color="black", pen="black")
-    fig.text(textfiles=None, x=ciuc.Lon - 0.15, y=ciuc.Lat - 0.1,
-            position=None, text=ciuc.Nombre, angle=0,
-            font='4p,Helvetica-Bold,black', justify='LM')
+    for index, row in ciuc.iterrows():
+        fig.plot(x=row['Lon'], y=row['Lat'], style="c0.12c", color="black", pen="black")
+        fig.text(x=row['Lon'] - 0.15, y=row['Lat'] - 0.1, text=row['Nombre'], font='4p,Helvetica-Bold,black', justify='LM')
 
     #Ciudades pequeñas
-    fig.plot(x=ciu.Lon, y=ciu.Lat, style="c0.05c", color="black", pen="black")
-    fig.text(textfiles=None, x=ciu.Lon - 0.15, y=ciu.Lat - 0.1,
-            position=None, text=ciu.Nombre, angle=0,
-            font='3p,Helvetica-Bold,black', justify='LM')
+    for index, row in ciu.iterrows():
+        fig.plot(x=row['Lon'], y=row['Lat'], style="c0.05c", color="black", pen="black")
+        fig.text(x=row['Lon'] - 0.15, y=row['Lat'] - 0.1, text=row['Nombre'], font='3p,Helvetica-Bold,black', justify='LM')
 
     # Sismo
     fig.plot(x=sismo_lon, y=sismo_lat, style="a0.8c", color='white', pen="black")
@@ -56,45 +55,37 @@ def main():
     norte_lon = sismo_lon - x_range + 0.2
     norte_lat = sismo_lat + y_range - 0.8
     fig.plot(x=norte_lon, y=norte_lat, style="c0.3c", pen="1.2p,black")
-
     fig.plot(x=[norte_lon, norte_lon], y=[norte_lat - 0.3, norte_lat + 0.3], pen="1p,black")
     fig.plot(x=[norte_lon-0.18, norte_lon+0.18], y=[norte_lat, norte_lat], pen="1p,black")
-
     fig.text(x=norte_lon, y=norte_lat + 0.4,text='N', font='14p,Helvetica-Bold,black', justify='CM')
 
-    fig.legend(position="jBR", box='+glavender+p0.5p+r',spec='./assets/estaciones_legend.txt')
+    # Guardar la figura principal
+    fig.savefig('./imagenes/ejemplo.png')
 
-    # Trazar el rectángulo
+    # Definir las dimensiones del rectángulo para el mapa pequeño
+    width = 2
+    height = 2
 
-    # Tamaño del rectángulo (ancho y alto)
-    width = 2.5
-    height = 2.5
-
-    # Calcular las coordenadas de las esquinas del rectángulo
     lon_start = sismo_lon - width / 2
     lon_end = sismo_lon + width / 2
     lat_start = sismo_lat - height / 2
     lat_end = sismo_lat + height / 2
+    # Crear una figura para el mapa pequeño
 
-    # Definir las coordenadas del rectángulo como una lista de listas
-    rectangle = [[lon_start, lat_start, lon_end, lat_end]]
+    rectangle_x = [lon_start, lon_end, lon_end, lon_start, lon_start]
+    rectangle_y = [lat_start, lat_start, lat_end, lat_end, lat_start]
 
-    #mapa pequeño
-    with fig.inset(
-        position="jBL",
-        region=[-74, -59, 1, 13],  # Región ajustada a Venezuela
-        projection="M3c",  # Proyección Mercator
-    ):
-        fig.grdimage(grid='./assets/etopo1_bedrock.grd', cmap='./assets/verde.cpt', frame=True)
-        fig.coast(
-            region=[-74, -59, 1, 13],  # Región ajustada a Venezuela
-            shorelines=True,
-            resolution="f",
-            area_thresh=10000,
-            borders="1/0.8p",
-        )
-        fig.plot(data=rectangle, style="r+s", pen="1p,red")
 
-    fig.savefig('./imagenes/ejemplo.png')
+    inset = pygmt.Figure()
+    inset.grdimage(grid='./assets/etopo1_bedrock.grd', cmap='./assets/verde.cpt', region=[-74, -59, 1, 13], frame=False)
+    inset.coast(region=[-74, -59, 1, 13], shorelines=True, resolution="f", area_thresh=10000, borders="1/0.8p")
+
+    # Trazar el rectángulo en el mapa pequeño
+    inset.plot(x=rectangle_x, y=rectangle_y, pen="4p,red")
+    # Guardar el mapa pequeño como una imagen separada
+    inset.savefig('./imagenes/mapa_pequeno.png')
+
+
+
 if __name__ == "__main__":
-     main()
+    main()
