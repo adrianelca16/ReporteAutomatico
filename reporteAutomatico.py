@@ -114,8 +114,15 @@ def generar_reporte(args):
     c.line(407, 333, 414, 333)
 
     c.setStrokeColor(black)
+
+    c.setLineWidth(5)
+    c.line(127,665, 127, 322)
+    c.line(485,665, 485, 322)
+    c.line(127,663,485,663)
+    c.line(127,325,485,325)
     c.setFont("Helvetica", 6)
 
+    c.setLineWidth(2)
     c.drawString(170, h-505, "Proyección Mercator | Datum WGS84 | Escala 1:3.500.000 | Fuentes: IGVSB, Funvisis")
     #campos que me faltan por arg
     
@@ -144,8 +151,8 @@ def generar_reporte(args):
     c.drawString(320, h-569, "Magnitud (Mw): ")
     c.drawString(250, h-587, "El sismo se localiza a: ")
 
-    c.drawString(135, h-601, Localiza1)
-    c.drawString(145, h-614, Localiza2)
+    c.drawString(165, h-601, Localiza1)
+    c.drawString(175, h-614, Localiza2)
 
     c.setFont("Helvetica",10)
     c.drawString(87, h-643, "Atención: Los datos reflejados en este reporte preliminar son generados por una aplicación de")
