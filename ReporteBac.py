@@ -80,25 +80,26 @@ class MiApp(QtWidgets.QMainWindow,):
         comandoLista = "scevtls -d postgresql:// --begin 01-01-2024 00:00:00 > lista_de_eventos.txt"
         #subprocess.call(comandoLista, shell=True)
         texto_busqueda = self.ui.lineEdit_ID.text()
-    
+        
         if not texto_busqueda:
             return
-        with open("lista_de_eventosAdrianPrueba.txt", "r") as archivo:
+        
+        encontrado = False  # Variable para indicar si se encontró el texto
+        
+        with open("lista_de_eventos.txt", "r") as archivo:
             lineas = archivo.readlines()
+            
+            for linea in lineas:
+                if texto_busqueda in linea:
+                    encontrado = True
+                    break  # Salir del bucle si se encuentra una coincidencia
         
-        for linea in lineas:
-            if texto_busqueda in linea:
-                linea.strip()
-                #comandoXml = "scxmldump -d postgresql:// -E " + linea.strip() + " -PAMF -o ultimo_id_evento.xml"
-                #subprocess.call(comandoXml,shell=True)
-                comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimo_id_evento.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
-                #subprocess.call(comandoBoletin,shell=True)
-                subprocess.call([python_path, 'leer.py'])
-                self.ui.stackedWidget_izq.setCurrentIndex(1)
-                image_widget = create_image_widget("./muestra.png",400,500)
-                self.ui.stackedWidget_der.insertWidget(1, image_widget)
-                self.ui.stackedWidget_der.setCurrentIndex(1)
-        
+        if encontrado:
+            print("El texto está presente en el archivo.")
+            # Aquí puedes agregar el código para realizar alguna acción si se encuentra el texto
+        else:
+            print("El texto no está presente en el archivo.")
+            # Aquí puedes agregar el código para realizar alguna acción si no se encuentra el texto
     def volver(self):
         self.ui.stackedWidget_izq.setCurrentIndex(0)
         self.ui.stackedWidget_der.setCurrentIndex(0)
