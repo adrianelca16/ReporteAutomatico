@@ -293,7 +293,7 @@ class Ui_MainWindow(object):
         self.tableWidget_ultimos10.setCornerButtonEnabled(True)
         self.tableWidget_ultimos10.setObjectName("tableWidget_ultimos10")
         self.tableWidget_ultimos10.setColumnCount(3)
-        self.tableWidget_ultimos10.setRowCount(0)
+        self.tableWidget_ultimos10.setRowCount(10)
         item = QtWidgets.QTableWidgetItem()
         item.setTextAlignment(QtCore.Qt.AlignCenter)
         self.tableWidget_ultimos10.setHorizontalHeaderItem(0, item)

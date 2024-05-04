@@ -1,6 +1,6 @@
 from Reporte import *
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget,QFileDialog
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget,QFileDialog, QTableWidgetItem
 from PyQt5.QtGui import QPixmap
 import sys
 import subprocess
@@ -21,9 +21,9 @@ class MiApp(QtWidgets.QMainWindow,):
         #ventana de busqueda
         self.ui.pushButton_busquedaManual.clicked.connect(lambda: self.ui.stackedWidget_izq.setCurrentIndex(2))
         self.ui.pushButton_RegresarID.clicked.connect(self.volver)
-        
+        self.ui.pushButton_continuarID.clicked.connect(self.buscarID)
         #ventana de ultimos 10
-        self.ui.pushButton_ultimos10.clicked.connect(lambda: self.ui.stackedWidget_izq.setCurrentIndex(3))
+        self.ui.pushButton_ultimos10.clicked.connect(self.ultimosSismos)
         self.ui.pushButton_regresar10.clicked.connect(self.volver)
 
         #ventana de fecha
@@ -48,7 +48,56 @@ class MiApp(QtWidgets.QMainWindow,):
         image_widget = create_image_widget("./muestra.png",400,500)
         self.ui.stackedWidget_der.insertWidget(1, image_widget)
         self.ui.stackedWidget_der.setCurrentIndex(1)
- 
+
+    def ultimosSismos(self):
+        with open("lista_de_eventosAdrianPrueba.txt", "r") as archivo:
+            lineas = archivo.readlines()[-10:][::-1] 
+            for indice,linea in enumerate(lineas):
+                # comandoXml = "scxmldump -d postgresql:// -E " + linea.strip() + " -PAMF -o ultimos_10_sismos.xml"
+                # subprocess.call(comandoXml,shell=True)
+                # comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimos_10_sismos.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
+                # subprocess.call(comandoBoletin,shell=True)
+                with open ('bulletin_ultimo_evento.txt', 'r') as archivo:
+                    lineasArchivo = archivo.readlines()
+                    lineaArchivo = lineasArchivo[5].strip().split()
+                    fecha = lineaArchivo[5]
+                    hora = lineaArchivo[6]
+                    idSismo = linea.strip()
+                    if indice >= self.ui.tableWidget_ultimos10.rowCount():
+                        return
+                    
+                    item_id = QTableWidgetItem(idSismo)
+                    item_fecha = QTableWidgetItem(fecha)
+                    item_hora = QTableWidgetItem(hora)
+                    
+                    self.ui.tableWidget_ultimos10.setItem(indice, 2, item_id)
+                    self.ui.tableWidget_ultimos10.setItem(indice, 0, item_fecha)
+                    self.ui.tableWidget_ultimos10.setItem(indice, 1, item_hora)
+        self.ui.stackedWidget_izq.setCurrentIndex(3)
+
+    def buscarID(self):
+        python_path = sys.executable
+        comandoLista = "scevtls -d postgresql:// --begin 01-01-2024 00:00:00 > lista_de_eventos.txt"
+        #subprocess.call(comandoLista, shell=True)
+        texto_busqueda = self.ui.lineEdit_ID.text()
+    
+        if not texto_busqueda:
+            return
+        with open("lista_de_eventosAdrianPrueba.txt", "r") as archivo:
+            lineas = archivo.readlines()
+        
+        for linea in lineas:
+            if texto_busqueda in linea:
+                linea.strip()
+                #comandoXml = "scxmldump -d postgresql:// -E " + linea.strip() + " -PAMF -o ultimo_id_evento.xml"
+                #subprocess.call(comandoXml,shell=True)
+                comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimo_id_evento.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
+                #subprocess.call(comandoBoletin,shell=True)
+                subprocess.call([python_path, 'leer.py'])
+                self.ui.stackedWidget_izq.setCurrentIndex(1)
+                image_widget = create_image_widget("./muestra.png",400,500)
+                self.ui.stackedWidget_der.insertWidget(1, image_widget)
+                self.ui.stackedWidget_der.setCurrentIndex(1)
         
     def volver(self):
         self.ui.stackedWidget_izq.setCurrentIndex(0)
