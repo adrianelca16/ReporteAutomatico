@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPixmap
 import sys
 import subprocess
 import shutil
+import re
 
 class MiApp(QtWidgets.QMainWindow,):
     def __init__(self):
@@ -52,28 +53,51 @@ class MiApp(QtWidgets.QMainWindow,):
     def ultimosSismos(self):
         with open("lista_de_eventosAdrianPrueba.txt", "r") as archivo:
             lineas = archivo.readlines()[-10:][::-1] 
-            for indice,linea in enumerate(lineas):
-                # comandoXml = "scxmldump -d postgresql:// -E " + linea.strip() + " -PAMF -o ultimos_10_sismos.xml"
-                # subprocess.call(comandoXml,shell=True)
-                # comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimos_10_sismos.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
-                # subprocess.call(comandoBoletin,shell=True)
-                with open ('bulletin_ultimo_evento.txt', 'r') as archivo:
-                    lineasArchivo = archivo.readlines()
-                    lineaArchivo = lineasArchivo[5].strip().split()
-                    fecha = lineaArchivo[5]
-                    hora = lineaArchivo[6]
-                    idSismo = linea.strip()
-                    if indice >= self.ui.tableWidget_ultimos10.rowCount():
-                        return
-                    
-                    item_id = QTableWidgetItem(idSismo)
-                    item_fecha = QTableWidgetItem(fecha)
-                    item_hora = QTableWidgetItem(hora)
-                    
-                    self.ui.tableWidget_ultimos10.setItem(indice, 2, item_id)
-                    self.ui.tableWidget_ultimos10.setItem(indice, 0, item_fecha)
-                    self.ui.tableWidget_ultimos10.setItem(indice, 1, item_hora)
-        self.ui.stackedWidget_izq.setCurrentIndex(3)
+
+            for indice, linea in enumerate(lineas):
+                comandoXml = "scxmldump -d postgresql:// -E " + linea + " -PAMF -o ultimo_evento.xml"
+                #subprocess.call(comandoXml,shell=True)
+                comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimo_evento.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
+                #subprocess.call(comandoBoletin,shell=True)
+                with open('bulletin_ultimo_evento.txt', 'r') as archivo_bulletin:
+                    lineas_archivo = archivo_bulletin.read()
+                    patron = r"Alert\s+(.*?):.*?(\d+/\d+/\d+\s+\d+:\d+:\d+\.\d+)"
+                    resultado = re.search(patron, lineas_archivo, re.DOTALL)
+
+                    if resultado:
+                        id_sismo = resultado.group(1)
+                        fecha_hora = resultado.group(2)
+
+                        # Dividir la cadena de fecha y hora
+                        fecha, hora = fecha_hora.split()
+                if indice >= self.ui.tableWidget_ultimos10.rowCount():
+                    break
+
+                # Crear y establecer los elementos en la tabla
+                item_id = QTableWidgetItem(id_sismo)
+                item_fecha = QTableWidgetItem(fecha)
+                item_hora = QTableWidgetItem(hora)
+
+                self.ui.tableWidget_ultimos10.setItem(indice, 2, item_id)
+                self.ui.tableWidget_ultimos10.setItem(indice, 0, item_fecha)
+                self.ui.tableWidget_ultimos10.setItem(indice, 1, item_hora)
+
+            self.ui.stackedWidget_izq.setCurrentIndex(3)
+            self.ui.tableWidget_ultimos10.itemClicked.connect(self.obtenerIdSismo)
+
+    def obtenerIdSismo(self, item):
+        python_path = sys.executable
+        fila = item.row()
+        id_sismo = self.ui.tableWidget_ultimos10.item(fila, 2).text()
+        comandoXml = "scxmldump -d postgresql:// -E " + id_sismo + " -PAMF -o ultimo_evento.xml"
+        #subprocess.call(comandoXml,shell=True)
+        comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimo_evento.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
+        #subprocess.call(comandoBoletin,shell=True)
+        subprocess.call([python_path, 'leer.py'])
+        self.ui.stackedWidget_izq.setCurrentIndex(1)
+        image_widget = create_image_widget("./muestra.png",400,500)
+        self.ui.stackedWidget_der.insertWidget(1, image_widget)
+        self.ui.stackedWidget_der.setCurrentIndex(1)
 
     def buscarID(self):
         python_path = sys.executable
@@ -84,22 +108,24 @@ class MiApp(QtWidgets.QMainWindow,):
         if not texto_busqueda:
             return
         
-        encontrado = False  # Variable para indicar si se encontró el texto
-        
-        with open("lista_de_eventos.txt", "r") as archivo:
+        with open("lista_de_eventosAdrianPrueba.txt", "r") as archivo:
             lineas = archivo.readlines()
             
             for linea in lineas:
                 if texto_busqueda in linea:
-                    encontrado = True
+                    python_path = sys.executable
+                    comandoXml = "scxmldump -d postgresql:// -E " + texto_busqueda + " -PAMF -o ultimo_evento.xml"
+                    #subprocess.call(comandoXml,shell=True)
+                    comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimo_evento.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
+                    #subprocess.call(comandoBoletin,shell=True)
+                    subprocess.call([python_path, 'leer.py'])
+                    self.ui.stackedWidget_izq.setCurrentIndex(1)
+                    image_widget = create_image_widget("./muestra.png",400,500)
+                    self.ui.stackedWidget_der.insertWidget(1, image_widget)
+                    self.ui.stackedWidget_der.setCurrentIndex(1)
                     break  # Salir del bucle si se encuentra una coincidencia
-        
-        if encontrado:
-            print("El texto está presente en el archivo.")
-            # Aquí puedes agregar el código para realizar alguna acción si se encuentra el texto
-        else:
-            print("El texto no está presente en el archivo.")
-            # Aquí puedes agregar el código para realizar alguna acción si no se encuentra el texto
+
+
     def volver(self):
         self.ui.stackedWidget_izq.setCurrentIndex(0)
         self.ui.stackedWidget_der.setCurrentIndex(0)
