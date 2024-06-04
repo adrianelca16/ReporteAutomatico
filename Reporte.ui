@@ -91,7 +91,7 @@
           <item>
            <widget class="QStackedWidget" name="stackedWidget_izq">
             <property name="currentIndex">
-             <number>0</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="page_izq1">
              <widget class="QWidget" name="layoutWidget">
@@ -732,77 +732,7 @@ QPushButton:hover {
              </layout>
             </widget>
             <widget class="QWidget" name="page_izq3">
-             <widget class="QTableWidget" name="tableWidget_ultimos10">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>30</y>
-                <width>371</width>
-                <height>301</height>
-               </rect>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QTableWidget{
-	border: none;
-	font-size: 12pt;
-	background-color: rgb(255, 213, 193);
-gridline-color:(255,255,255)
-}
-
-QHeaderView::Section {
-	background-color: rgb(255, 131, 73);
-	border: 1px solid rgb(255,255,255);
-color:rgb(255,255,255);
-font-size: 12pr
-}</string>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-              <property name="cornerButtonEnabled">
-               <bool>true</bool>
-              </property>
-              <attribute name="horizontalHeaderCascadingSectionResizes">
-               <bool>false</bool>
-              </attribute>
-              <attribute name="horizontalHeaderDefaultSectionSize">
-               <number>123</number>
-              </attribute>
-              <attribute name="horizontalHeaderHighlightSections">
-               <bool>false</bool>
-              </attribute>
-              <column>
-               <property name="text">
-                <string>Fecha</string>
-               </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Hora</string>
-               </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>ID</string>
-               </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
-               </property>
-              </column>
-             </widget>
-             <widget class="QWidget" name="">
+             <widget class="QWidget" name="layoutWidget">
               <property name="geometry">
                <rect>
                 <x>0</x>

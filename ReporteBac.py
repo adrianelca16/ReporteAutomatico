@@ -1,13 +1,13 @@
 from Reporte import *
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget,QFileDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QFileDialog, QTableWidgetItem
 from PyQt5.QtGui import QPixmap
 import sys
 import subprocess
 import shutil
 import re
 
-class MiApp(QtWidgets.QMainWindow,):
+class MiApp(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         # Crear la ventana principal
@@ -23,6 +23,7 @@ class MiApp(QtWidgets.QMainWindow,):
         self.ui.pushButton_busquedaManual.clicked.connect(lambda: self.ui.stackedWidget_izq.setCurrentIndex(2))
         self.ui.pushButton_RegresarID.clicked.connect(self.volver)
         self.ui.pushButton_continuarID.clicked.connect(self.buscarID)
+        
         #ventana de ultimos 10
         self.ui.pushButton_ultimos10.clicked.connect(self.ultimosSismos)
         self.ui.pushButton_regresar10.clicked.connect(self.volver)
@@ -30,9 +31,6 @@ class MiApp(QtWidgets.QMainWindow,):
         #ventana de fecha
         self.ui.pushButton_busquedaFecha.clicked.connect(lambda: self.ui.stackedWidget_izq.setCurrentIndex(4))
         self.ui.pushButton_regresarFecha.clicked.connect(self.volver)
-
-    
-
 
     def irImprimir(self):
         python_path = sys.executable
@@ -52,7 +50,8 @@ class MiApp(QtWidgets.QMainWindow,):
 
     def ultimosSismos(self):
         with open("lista_de_eventosAdrianPrueba.txt", "r") as archivo:
-            lineas = archivo.readlines()[-10:][::-1] 
+            lineas = [linea.strip() for linea in archivo.readlines()[-10:][::-1]]
+            print(lineas) 
 
             for indice, linea in enumerate(lineas):
                 comandoXml = "scxmldump -d postgresql:// -E " + linea + " -PAMF -o ultimo_evento.xml"
@@ -61,6 +60,7 @@ class MiApp(QtWidgets.QMainWindow,):
                 #subprocess.call(comandoBoletin,shell=True)
                 with open('bulletin_ultimo_evento.txt', 'r') as archivo_bulletin:
                     lineas_archivo = archivo_bulletin.read()
+
                     patron = r"Alert\s+(.*?):.*?(\d+/\d+/\d+\s+\d+:\d+:\d+\.\d+)"
                     resultado = re.search(patron, lineas_archivo, re.DOTALL)
 
@@ -70,17 +70,15 @@ class MiApp(QtWidgets.QMainWindow,):
 
                         # Dividir la cadena de fecha y hora
                         fecha, hora = fecha_hora.split()
-                if indice >= self.ui.tableWidget_ultimos10.rowCount():
-                    break
 
-                # Crear y establecer los elementos en la tabla
-                item_id = QTableWidgetItem(id_sismo)
-                item_fecha = QTableWidgetItem(fecha)
-                item_hora = QTableWidgetItem(hora)
-
-                self.ui.tableWidget_ultimos10.setItem(indice, 2, item_id)
-                self.ui.tableWidget_ultimos10.setItem(indice, 0, item_fecha)
-                self.ui.tableWidget_ultimos10.setItem(indice, 1, item_hora)
+                        # Crear y establecer los elementos en la tabla
+                        item_id = QTableWidgetItem(id_sismo)
+                        item_fecha = QTableWidgetItem(fecha)
+                        item_hora = QTableWidgetItem(hora)
+                
+                        self.ui.tableWidget_ultimos10.setItem(indice, 2, item_id)
+                        self.ui.tableWidget_ultimos10.setItem(indice, 0, item_fecha)
+                        self.ui.tableWidget_ultimos10.setItem(indice, 1, item_hora)
 
             self.ui.stackedWidget_izq.setCurrentIndex(3)
             self.ui.tableWidget_ultimos10.itemClicked.connect(self.obtenerIdSismo)
@@ -125,7 +123,6 @@ class MiApp(QtWidgets.QMainWindow,):
                     self.ui.stackedWidget_der.setCurrentIndex(1)
                     break  # Salir del bucle si se encuentra una coincidencia
 
-
     def volver(self):
         self.ui.stackedWidget_izq.setCurrentIndex(0)
         self.ui.stackedWidget_der.setCurrentIndex(0)
@@ -142,8 +139,7 @@ class MiApp(QtWidgets.QMainWindow,):
             # Copiar el archivo PDF a la nueva ubicación
             shutil.copyfile(ruta_pdf_origen, ruta_destino)
 
-   
-def create_image_widget(image_path,width, height):
+def create_image_widget(image_path, width, height):
     image_widget = QWidget()
     layout = QVBoxLayout()
     label = QLabel()
@@ -159,4 +155,4 @@ if __name__ == "__main__":
      app = QtWidgets.QApplication(sys.argv)
      mi_app = MiApp()
      mi_app.show()
-     sys.exit(app.exec_())		
+     sys.exit(app.exec_())

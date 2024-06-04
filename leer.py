@@ -14,6 +14,8 @@ with open('bulletin_ultimo_evento.txt', 'r') as archivo:
     cantidad = len(lista)
 
     profundidad = lista[cantidad - 2]
+    if profundidad == "0":
+        profundidad = 5
     longitud = lista[cantidad - 4]
     latitud = lista[cantidad - 6]
     hora = lista[cantidad - 7]
