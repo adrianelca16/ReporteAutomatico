@@ -3,7 +3,7 @@
 
  LOCSAT solution with earthmodel iasp91 (with start solution, 5 stations used, weight 5):
 
-  Noar of Venezuela  MLv=5.0  2024/03/26  02:18:45.8  10.50 N  69.53 W  10 km
+  Noar of Venezuela  MLv=4.3  2024/03/26  02:18:45.8  12.50 N  69.53 W  10 km
 
   Stat  Net Date      Time               Amp  Per   Res  Dist  Az  mb  ML  mB
   GRGR  CU  24/03/10  02:17:31.9         0.0  0.0  -0.3   1.5  35 0.0 3.3 0.0
