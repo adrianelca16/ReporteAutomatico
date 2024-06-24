@@ -130,13 +130,13 @@ def generar_reporte(args):
     c.setFont("Helvetica-Bold", 11)
 
     c.drawString(230, h-530, fechaUTC)
-    c.drawString(238, h-543, horaUTC)
+    c.drawString(238, h-543, horaUTC.replace('.', ','))
     c.drawString(230, h-556, fechaHLV)
-    c.drawString(238, h-569, horaHLV)
-    c.drawString(380, h-530, Latitud)
-    c.drawString(390, h-543, Longitud)
-    c.drawString(410, h-556, Profundidad)
-    c.drawString(400, h-569, Magnitud)
+    c.drawString(238, h-569, horaHLV.replace('.', ','))
+    c.drawString(380, h-530, Latitud.replace('.', ','))
+    c.drawString(390, h-543, Longitud.replace('.', ','))
+    c.drawString(410, h-556, Profundidad.replace('.', ','))
+    c.drawString(400, h-569, Magnitud.replace('.', ','))
     
 
     c.setFont("Helvetica", 11)

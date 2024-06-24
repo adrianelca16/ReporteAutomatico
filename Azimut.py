@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
         azimut = calcular_azimut(lat_punto_fijo, lon_punto_fijo, lat, lon) 
 
-        resultado = f"{round(distancia)} km hacia el {direccion} desde {nomCiu} (Azm. {round(azimut)})"
+        resultado = f"{round(distancia)} km hacia el {direccion} desde {nomCiu} (Azm. {round(azimut)}°)"
 
         resultados.append(resultado)
     
