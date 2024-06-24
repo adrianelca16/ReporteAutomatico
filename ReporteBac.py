@@ -1,6 +1,6 @@
 from Reporte import *
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget,QFileDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QFileDialog, QTableWidgetItem
 from PyQt5.QtGui import QPixmap
 import sys
 import subprocess
@@ -23,23 +23,23 @@ class MiApp(QtWidgets.QMainWindow):
         self.ui.pushButton_busquedaManual.clicked.connect(lambda: self.ui.stackedWidget_izq.setCurrentIndex(2))
         self.ui.pushButton_RegresarID.clicked.connect(self.volver)
         self.ui.pushButton_continuarID.clicked.connect(self.buscarID)
+        
         #ventana de ultimos 10
         self.ui.pushButton_ultimos10.clicked.connect(self.ultimosSismos)
         self.ui.pushButton_regresar10.clicked.connect(self.volver)
 
         #ventana de fecha
         self.ui.pushButton_busquedaFecha.clicked.connect(lambda: self.ui.stackedWidget_izq.setCurrentIndex(4))
+        self.ui.pushButton_continuarFecha.clicked.connect(self.busquedaFecha)
         self.ui.pushButton_regresarFecha.clicked.connect(self.volver)
-
-    
-
 
     def irImprimir(self):
         python_path = sys.executable
-        comandoLista = "scevtls -d postgresql:// --begin 01-01-2024 00:00:00 > lista_de_eventos.txt"
+        comandoLista = "scevtls -d postgresql:// --begin 01-01-2024 00:00:00 > lista_de_eventosAdrian.txt"
         #subprocess.call(comandoLista, shell=True)
-        #with open("lista_de_eventos.txt","r") as archivo:
-            #ultimo_sismo = archivo.readlines()[-1]
+        with open("lista_de_eventosAdrianPrueba.txt","r") as archivo:
+            ultimo_sismo = [linea.strip() for linea in archivo.readlines()[-1:][::-1]]
+            print(ultimo_sismo)
         #comandoXml = "scxmldump -d postgresql:// -E " + ultimo_sismo + " -PAMF -o ultimo_evento.xml"
         #subprocess.call(comandoXml,shell=True)
         comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimo_evento.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
@@ -52,7 +52,7 @@ class MiApp(QtWidgets.QMainWindow):
 
     def ultimosSismos(self):
         with open("lista_de_eventosAdrianPrueba.txt", "r") as archivo:
-            lineas = archivo.readlines()[-10:][::-1] 
+            lineas = [linea.strip() for linea in archivo.readlines()[-10:][::-1]]
 
             for indice, linea in enumerate(lineas):
                 comandoXml = "scxmldump -d postgresql:// -E " + linea + " -PAMF -o ultimo_evento.xml"
@@ -61,6 +61,7 @@ class MiApp(QtWidgets.QMainWindow):
                 #subprocess.call(comandoBoletin,shell=True)
                 with open('bulletin_ultimo_evento.txt', 'r') as archivo_bulletin:
                     lineas_archivo = archivo_bulletin.read()
+
                     patron = r"Alert\s+(.*?):.*?(\d+/\d+/\d+\s+\d+:\d+:\d+\.\d+)"
                     resultado = re.search(patron, lineas_archivo, re.DOTALL)
 
@@ -70,17 +71,15 @@ class MiApp(QtWidgets.QMainWindow):
 
                         # Dividir la cadena de fecha y hora
                         fecha, hora = fecha_hora.split()
-                if indice >= self.ui.tableWidget_ultimos10.rowCount():
-                    break
 
-                # Crear y establecer los elementos en la tabla
-                item_id = QTableWidgetItem(id_sismo)
-                item_fecha = QTableWidgetItem(fecha)
-                item_hora = QTableWidgetItem(hora)
-
-                self.ui.tableWidget_ultimos10.setItem(indice, 2, item_id)
-                self.ui.tableWidget_ultimos10.setItem(indice, 0, item_fecha)
-                self.ui.tableWidget_ultimos10.setItem(indice, 1, item_hora)
+                        # Crear y establecer los elementos en la tabla
+                        item_id = QTableWidgetItem(id_sismo)
+                        item_fecha = QTableWidgetItem(fecha)
+                        item_hora = QTableWidgetItem(hora)
+                
+                        self.ui.tableWidget_ultimos10.setItem(indice, 2, item_id)
+                        self.ui.tableWidget_ultimos10.setItem(indice, 0, item_fecha)
+                        self.ui.tableWidget_ultimos10.setItem(indice, 1, item_hora)
 
             self.ui.stackedWidget_izq.setCurrentIndex(3)
             self.ui.tableWidget_ultimos10.itemClicked.connect(self.obtenerIdSismo)
@@ -109,8 +108,7 @@ class MiApp(QtWidgets.QMainWindow):
             return
         
         with open("lista_de_eventosAdrianPrueba.txt", "r") as archivo:
-            lineas = archivo.readlines()
-            
+            lineas = [linea.strip() for linea in archivo.readlines()]
             for linea in lineas:
                 if texto_busqueda in linea:
                     python_path = sys.executable
@@ -124,7 +122,51 @@ class MiApp(QtWidgets.QMainWindow):
                     self.ui.stackedWidget_der.insertWidget(1, image_widget)
                     self.ui.stackedWidget_der.setCurrentIndex(1)
                     break  # Salir del bucle si se encuentra una coincidencia
+                else :
+                    print("aqui va el error de no encontrado")
+    
+    def busquedaFecha(self):
+        python_path = sys.executable
 
+        año = self.ui.spinBox_ano.text()
+        mes= str(self.ui.comboBox_mes.currentIndex() + 1).zfill(2)
+        dia = str(self.ui.spinBox_dia.text()).zfill(2)
+        comandoLista = f"scevtls -d postgresql:// --begin {dia}-{mes}-{año} 00:00:00 > lista_de_eventos.txt"
+
+        with open("lista_de_eventosAdrianPrueba.txt", "r") as archivo:
+            lineas = [linea.strip() for linea in archivo.readlines()]
+
+            self.ui.tableWidget_ultimos10.setRowCount(len(lineas))
+            for indice, linea in enumerate(lineas):
+                comandoXml = "scxmldump -d postgresql:// -E " + linea + " -PAMF -o ultimo_evento.xml"
+                #subprocess.call(comandoXml,shell=True)
+                comandoBoletin = "scbulletin -i /home/ndcuser/adrian/ReporteAutomatico/ultimo_evento.xml > /home/ndcuser/adrian/ReporteAutomatico/bulletin_ultimo_evento.txt"
+                #subprocess.call(comandoBoletin,shell=True)
+                with open('bulletin_ultimo_evento.txt', 'r') as archivo_bulletin:
+                    lineas_archivo = archivo_bulletin.read()
+
+                    patron = r"Alert\s+(.*?):.*?(\d+/\d+/\d+\s+\d+:\d+:\d+\.\d+)"
+                    resultado = re.search(patron, lineas_archivo, re.DOTALL)
+
+                    if resultado:
+                        id_sismo = resultado.group(1)
+                        fecha_hora = resultado.group(2)
+
+                        # Dividir la cadena de fecha y hora
+                        fecha, hora = fecha_hora.split()
+
+                        # Crear y establecer los elementos en la tabla
+                        item_id = QTableWidgetItem(id_sismo)
+                        item_fecha = QTableWidgetItem(fecha)
+                        item_hora = QTableWidgetItem(hora)
+                
+                        self.ui.tableWidget_ultimos10.setItem(indice, 2, item_id)
+                        self.ui.tableWidget_ultimos10.setItem(indice, 0, item_fecha)
+                        self.ui.tableWidget_ultimos10.setItem(indice, 1, item_hora)
+
+            self.ui.stackedWidget_izq.setCurrentIndex(3)
+            self.ui.tableWidget_ultimos10.itemClicked.connect(self.obtenerIdSismo)
+        print(comandoLista)
 
     def volver(self):
         self.ui.stackedWidget_izq.setCurrentIndex(0)
@@ -142,8 +184,7 @@ class MiApp(QtWidgets.QMainWindow):
             # Copiar el archivo PDF a la nueva ubicación
             shutil.copyfile(ruta_pdf_origen, ruta_destino)
 
-   
-def create_image_widget(image_path,width, height):
+def create_image_widget(image_path, width, height):
     image_widget = QWidget()
     layout = QVBoxLayout()
     label = QLabel()
@@ -159,4 +200,4 @@ if __name__ == "__main__":
      app = QtWidgets.QApplication(sys.argv)
      mi_app = MiApp()
      mi_app.show()
-     sys.exit(app.exec_())		
+     sys.exit(app.exec_())
