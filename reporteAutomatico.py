@@ -6,14 +6,13 @@ from pdf2image import convert_from_path
 from PIL import Image
 from reportlab.lib.colors import white, black, yellow, orange, red
 from reportlab.graphics.shapes import Drawing, Polygon
+import datetime
 
 def generar_reporte(args):
     w, h = letter
 
     fechaUTC = args.fec
-    fechaHLV = args.fec
     horaUTC = args.hor
-    horaHLV = args.hor
 
     #campos con args
     Latitud = args.lat
@@ -23,6 +22,16 @@ def generar_reporte(args):
 
     Localiza1 = args.azm1
     Localiza2 = args.azm2
+
+    # Combinar fecha y hora en una sola cadena
+    fecha_hora_str = fechaUTC + ' ' + horaUTC.replace('.', ',')
+# Convertir la cadena combinada a un objeto datetime
+    fecha_hora_dt = datetime.datetime.strptime(fecha_hora_str, "%Y/%m/%d %H:%M:%S,%f")
+    nueva_fecha_hora_dt = fecha_hora_dt + datetime.timedelta(hours=4)
+
+    fechaHLV  = nueva_fecha_hora_dt.strftime("%Y/%m/%d")
+    horaHLV = nueva_fecha_hora_dt.strftime("%H:%M:%S,%f")[:-5]  # Truncar microsegundos a milisegundos
+
 
     lon= float(Longitud)
     lonDeci = "{:.2f}".format(-lon)
