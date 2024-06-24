@@ -7,7 +7,7 @@ import subprocess
 import shutil
 import re
 
-class MiApp(QtWidgets.QMainWindow,):
+class MiApp(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         # Crear la ventana principal

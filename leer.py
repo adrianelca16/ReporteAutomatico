@@ -2,6 +2,7 @@ import re
 import subprocess
 import sys
 
+
 python_path = sys.executable
 
 with open('bulletin_ultimo_evento.txt', 'r') as archivo:
@@ -21,6 +22,7 @@ if resultado:
 
     # Dividir la cadena de fecha y hora
     fecha, hora = fecha_hora.split()
+
 
     # Extraer solo el valor numérico de la profundidad
     profundidad_numerica = re.search(r"(\d+)\s+km", profundidad_texto)
